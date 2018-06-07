@@ -5,8 +5,7 @@ const emailValidator = require('email-validator');
 
 const Account = new Schema({
     email: String,
-    password: String,
-    youtube_accounts: Array
+    password: String
 });
 
 Account.plugin(passportLocalMongoose, {
@@ -22,21 +21,6 @@ Account.plugin(passportLocalMongoose, {
 
 Account.statics.validateEmail = function (email) {
     return emailValidator.validate(email);
-};
-
-Account.methods.addYoutubeAccount = function (account, cb) {
-    this.youtube_accounts.push(account);
-    this.save(cb);
-};
-
-Account.methods.removeYoutubeAccount = function (account, cb) {
-    for (var i = 0; i < this.youtube_accounts.length; i++) {
-        if (this.youtube_accounts[i].email === account) {
-            this.youtube_accounts.splice(i, 1);
-            this.save(cb);
-            return;
-        }
-    }
 };
 
 module.exports = mongoose.model('account', Account);
