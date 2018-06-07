@@ -1,4 +1,4 @@
 module.exports = {
-    dbUrl: '<mongodb url>',
-    mailgunApiKey: '<mailgun api key>'
+    dbUrl: process.env.MONGODB_URL,
+    mailgunApiKey: process.env.MAILGUN_KEY
 };
