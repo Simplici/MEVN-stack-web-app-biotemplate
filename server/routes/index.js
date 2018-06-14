@@ -4,16 +4,6 @@ const Account = require('../models/account');
 const router = express.Router();
 const emailService = require('../services/email');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { user : req.user });
-});
-
-/* GET register page. */
-router.get('/register', (req, res) => {
-    res.render('register', { });
-});
-
 /* register a new account */
 router.post('/register', (req, res, next) => {
     // validate email
@@ -27,32 +17,51 @@ router.post('/register', (req, res, next) => {
           return res.send({'error' : err.name, 'description' : err.message})
         }
         // send welcome email
-        emailService.sendWelcomeMail(req.body.username);
-        // login user
-        passport.authenticate('local')(req, res, () => {
-            req.session.save((err) => {
-                if (err) {
-                    return next(err);
-                }
-                return res.sendStatus(200)
-            });
-        });
+        emailService.sendConfirmationMail(account.email, account.emailValidationCode);
+        return res.sendStatus(200);
     });
 });
 
-/* GET login page */
-router.get('/login', (req, res) => {
-    res.render('login', { user : req.user, error : req.flash('error')});
+/* confirm a account */
+router.post('/confirm', (req, res, next) => {
+    Account.findOne({email: req.body.email}, function (err, account) {
+        if (err) {
+            return res.sendStatus(404);
+        } else {
+            const code = account.emailValidationCode.toString()
+            if (req.body.code === code) {
+                // confirmation code is correct, remove account email validation code
+                account.emailValidationCode = null;
+                account.save();
+                return res.sendStatus(200);
+            } else {
+                // confirmation code is not correct
+                return res.sendStatus(400);
+            }
+        }
+    });
 });
 
 /* login an account */
 router.post('/login', passport.authenticate('local'), (req, res, next) => {
-    req.session.save((err) => {
+    Account.findOne({email: req.body.username}, function (err, account) {
         if (err) {
-            return next(err);
+            return res.sendStatus(404);
+        } else {
+            if (account.emailValidationCode !== null) {
+                // account has not been confirmed
+                return res.sendStatus(400);
+            } else {
+                // account has been confirmed, login
+                req.session.save((err) => {
+                    if (err) {
+                        return next(err);
+                    }
+                    return res.sendStatus(200)
+                });
+            }
         }
-        return res.sendStatus(200)
-    });
+    })
 });
 
 /* logout a user */

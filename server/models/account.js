@@ -2,9 +2,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 const emailValidator = require('email-validator');
+const rn = require('random-number');
+
+const gen = rn.generator({
+    min: 1000,
+    max:  9999,
+    integer: true
+});
 
 const Account = new Schema({
     email: String,
+    emailValidationCode: {
+        type: Number,
+        default: gen
+    },
     password: String
 });
 

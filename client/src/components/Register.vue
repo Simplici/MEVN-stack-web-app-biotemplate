@@ -70,7 +70,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.$http.post('apis/register', {username: this.form.email, password: this.form.pass}).then(response => {
-            this.$router.push('/workspace/guide')
+            this.$router.push('/confirm/' + this.form.email)
           }, response => {
             let errMsg
             if (response.body.error === 'UserExistsError') {

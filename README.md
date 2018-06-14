@@ -13,3 +13,7 @@ MongoDB as the database
 
 ## frontend
 VueJS + ElementUI
+
+## authentication
+the authentication is implemented using passport.js, for the moment, only username&passowrd is supported.
+email confirmation is done with a confirmation code.

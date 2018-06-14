@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Intro from '@/components/Intro'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import Confirm from '@/components/Confirm'
 import Workspace from '@/components/Workspace'
 import Profile from '@/components/Profile'
 import Contact from '@/components/Contact'
@@ -25,6 +26,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/confirm/:email',
+      name: 'Confirm',
+      component: Confirm
     },
     {
       path: '/workspace',

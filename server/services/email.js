@@ -24,13 +24,16 @@ function sendMail(dest, subject, content) {
 	})
 }
 
-function sendWelcomeMail(dest) {
-	const subject = 'welcome';
-	const content = 'welcome'
+function sendConfirmationMail(dest, confirmationCode) {
+	const subject = 'confirm your email with confirmation code';
+	const content = `
+		<p>below is your confirmation code:</p>
+		<h2>${confirmationCode}</h2>
+	`
 	sendMail(dest, subject, content);
 }
 
 
 module.exports = {
-	sendWelcomeMail: sendWelcomeMail
+	sendConfirmationMail: sendConfirmationMail
 }
